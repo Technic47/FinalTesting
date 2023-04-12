@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create part</title>
+    <link href="/static/css/container.css" rel="stylesheet"/>
+    <link href="/static/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="header">
+    <h1 th:text="${username}">
+    </h1>
+    <nav>
+        <a th:href="@{/}">Смена пользователя</a>
+    </nav>
+</header>
+<div class="main">
+    <div class="container">
+        <form th:action="@{/new}" th:method="POST">
+
+        </form>
+    </div>
+</div>
+</body>
+</html>
