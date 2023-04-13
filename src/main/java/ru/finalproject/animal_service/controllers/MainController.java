@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.finalproject.animal_service.models.AnimalMove;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.GeneralService;
@@ -128,8 +127,8 @@ public class MainController {
         Actionable animal = service.getAnimal(animalType, animalId);
         switch (action) {
             case "finish" -> this.service.saveAnimal(animal);
-            case "addMove" -> this.service.animalAddMove(animal, new AnimalMove(animalType, moveId));
-            case "delMove" -> this.service.animalDelMove(animal, new AnimalMove(animalType, moveId));
+            case "addMove" -> this.service.animalAddMove(animal, moveId);
+            case "delMove" -> this.service.animalDelMove(animal, moveId);
             case "addFood" -> this.service.animalAddFood(animal, foodId);
             case "delFood" -> this.service.animalDelFood(animal, foodId);
         }

@@ -2,7 +2,6 @@ package ru.finalproject.animal_service.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.finalproject.animal_service.models.AnimalMove;
 import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
@@ -108,7 +107,7 @@ public class GeneralService {
         }
     }
 
-    public void animalAddMove(Actionable animal, AnimalMove move) {
+    public void animalAddMove(Actionable animal, Long move) {
         switch (animal.getClass().getSimpleName()) {
             case "Cat" -> this.catService.addToMovesList((Cat) animal, move);
             case "Dog" -> this.dogService.addToMovesList((Dog) animal, move);
@@ -119,7 +118,7 @@ public class GeneralService {
         }
     }
 
-    public void animalDelMove(Actionable animal, AnimalMove move) {
+    public void animalDelMove(Actionable animal, Long move) {
         switch (animal.getClass().getSimpleName()) {
             case "Cat" -> this.catService.delFromMovesList((Cat) animal, move);
             case "Dog" -> this.dogService.delFromMovesList((Dog) animal, move);

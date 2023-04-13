@@ -1,6 +1,5 @@
 package ru.finalproject.animal_service.services.abstracts;
 
-import ru.finalproject.animal_service.models.AnimalMove;
 import ru.finalproject.animal_service.models.animals.abstracts.Animals;
 import ru.finalproject.animal_service.repositories.abstracts.CommonRepository;
 
@@ -11,15 +10,15 @@ public class AnimalService<E extends Animals, R extends CommonRepository<E>> ext
         super(repository);
     }
 
-    public void addToMovesList(E animal, AnimalMove move){
-        Set<AnimalMove> moves = animal.getMoves();
+    public void addToMovesList(E animal, Long move){
+        Set<Long> moves = animal.getMoves();
         moves.add(move);
         animal.setMoves(moves);
         this.repository.save(animal);
     }
 
-    public void delFromMovesList(E animal, AnimalMove move){
-        Set<AnimalMove> moves = animal.getMoves();
+    public void delFromMovesList(E animal, Long move){
+        Set<Long> moves = animal.getMoves();
         moves.remove(move);
         animal.setMoves(moves);
         this.repository.save(animal);
