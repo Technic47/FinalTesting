@@ -38,10 +38,26 @@
 
                 <div class="col-5-2-no-boarders">
                     <br/>
+                    <label for="moves">Выберите команды:</label>
+                    <div th:object="${moves}">
+                        <select id="moves" th:name="moveId">
+                            <option th:each="item : ${moves}"
+                                    th:text="${item.getName()}"
+                                    th:value="${item.getId()}">
+                            </option>
+                        </select>
+                        <br/>
+                        <button th:name="action" th:type="submit" th:value="addMove">Добавить</button>
+                        <button th:name="action" th:type="submit" th:value="delMove">Убрать</button>
+                    </div>
+                    <br/>
+                </div>
+                <div class="col-5-2-no-boarders">
+                    <br/>
                     <label for="Food">Выберите еду:</label>
-                    <div th:object="${allParts}">
-                        <select id="Food" th:name="Food">
-                            <option th:each="item : ${Food}"
+                    <div th:object="${food}">
+                        <select id="Food" th:name="foodId">
+                            <option th:each="item : ${food}"
                                     th:text="${item.getName()}"
                                     th:value="${item.getId()}">
                             </option>

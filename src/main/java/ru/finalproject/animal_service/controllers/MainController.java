@@ -5,7 +5,11 @@ import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.finalproject.animal_service.models.AnimalMove;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.GeneralService;
@@ -60,19 +64,19 @@ public class MainController {
             Model model
     ) {
         switch (animalType) {
-            case "Cat" -> this.service.addAnimal(new Cat(name));
-            case "Dog" -> this.service.addAnimal(new Dog(name));
-            case "Humster" -> this.service.addAnimal(new Humster(name));
-            case "Camel" -> this.service.addAnimal(new Camel(name, time));
-            case "Horse" -> this.service.addAnimal(new Horse(name, time));
-            case "Donkey" -> this.service.addAnimal(new Donkey(name, time));
+            case "Cat" -> this.service.saveAnimal(new Cat(name));
+            case "Dog" -> this.service.saveAnimal(new Dog(name));
+            case "Humster" -> this.service.saveAnimal(new Humster(name));
+            case "Camel" -> this.service.saveAnimal(new Camel(name, time));
+            case "Horse" -> this.service.saveAnimal(new Horse(name, time));
+            case "Donkey" -> this.service.saveAnimal(new Donkey(name, time));
         }
         model.addAttribute("allAnimals", service.getAnimals());
         return "/animals";
     }
 
     @GetMapping("/newFoodMoves")
-    public String newFoodMoves(Model model){
+    public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", service.getAnimals());
         return "/newFoodMoves";
@@ -83,7 +87,7 @@ public class MainController {
             @RequestParam(value = "foodName", required = false) String foodName,
             @RequestParam(value = "moveName", required = false) String moveName,
             Model model
-    ){
+    ) {
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", service.getAnimals());
         if (foodName != null) {
@@ -100,7 +104,7 @@ public class MainController {
             @RequestParam(value = "type") String animalType,
             @RequestParam(value = "id") Long id,
             Model model
-    ){
+    ) {
         if (animalType.contains("Camel Horse Donkey")) {
             model.addAttribute("type", 1);
         } else {
@@ -112,10 +116,23 @@ public class MainController {
         return "/edit";
     }
 
-    @PostMapping
+    @PostMapping("/edit")
     public void edit(
-            @ModelAttribute("animal") Actionable animal
-    ){
-//        this.configure(animalType, id, model);
+            @RequestParam(value = "type") String animalType,
+            @RequestParam(value = "id") Long animalId,
+            @RequestParam(value = "foodId", required = false) Long foodId,
+            @RequestParam(value = "moveId", required = false) Long moveId,
+            @RequestParam(value = "action") String action,
+            Model model
+    ) {
+        Actionable animal = service.getAnimal(animalType, animalId);
+        switch (action) {
+            case "finish" -> this.service.saveAnimal(animal);
+            case "addMove" -> this.service.animalAddMove(animal, new AnimalMove(animalType, moveId));
+            case "delMove" -> this.service.animalDelMove(animal, new AnimalMove(animalType, moveId));
+            case "addFood" -> this.service.animalAddFood(animal, foodId);
+            case "delFood" -> this.service.animalDelFood(animal, foodId);
+        }
+        this.configure(animalType, animalId, model);
     }
 }

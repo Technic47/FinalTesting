@@ -2,6 +2,7 @@ package ru.finalproject.animal_service.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.finalproject.animal_service.models.AnimalMove;
 import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
@@ -23,7 +24,7 @@ public class GeneralService {
     private MovesService movesService;
     private FoodService foodService;
 
-    public void addAnimal(Actionable animal) {
+    public void saveAnimal(Actionable animal) {
         switch (animal.getClass().getSimpleName()) {
             case "Cat" -> this.catService.save((Cat) animal);
             case "Dog" -> this.dogService.save((Dog) animal);
@@ -107,25 +108,25 @@ public class GeneralService {
         }
     }
 
-    public void animalAddMove(Actionable animal, Long id) {
+    public void animalAddMove(Actionable animal, AnimalMove move) {
         switch (animal.getClass().getSimpleName()) {
-            case "Cat" -> this.catService.addToMovesList((Cat) animal, id);
-            case "Dog" -> this.dogService.addToMovesList((Dog) animal, id);
-            case "Camel" -> this.camelService.addToMovesList((Camel) animal, id);
-            case "Horse" -> this.horseService.addToMovesList((Horse) animal, id);
-            case "Donkey" -> this.donkeyService.addToMovesList((Donkey) animal, id);
-            case "Humster" -> this.humsterService.addToMovesList((Humster) animal, id);
+            case "Cat" -> this.catService.addToMovesList((Cat) animal, move);
+            case "Dog" -> this.dogService.addToMovesList((Dog) animal, move);
+            case "Camel" -> this.camelService.addToMovesList((Camel) animal, move);
+            case "Horse" -> this.horseService.addToMovesList((Horse) animal, move);
+            case "Donkey" -> this.donkeyService.addToMovesList((Donkey) animal, move);
+            case "Humster" -> this.humsterService.addToMovesList((Humster) animal, move);
         }
     }
 
-    public void animaldelMove(Actionable animal, Long id) {
+    public void animalDelMove(Actionable animal, AnimalMove move) {
         switch (animal.getClass().getSimpleName()) {
-            case "Cat" -> this.catService.delFromMovesList((Cat) animal, id);
-            case "Dog" -> this.dogService.delFromMovesList((Dog) animal, id);
-            case "Camel" -> this.camelService.delFromMovesList((Camel) animal, id);
-            case "Horse" -> this.horseService.delFromMovesList((Horse) animal, id);
-            case "Donkey" -> this.donkeyService.delFromMovesList((Donkey) animal, id);
-            case "Humster" -> this.humsterService.delFromMovesList((Humster) animal, id);
+            case "Cat" -> this.catService.delFromMovesList((Cat) animal, move);
+            case "Dog" -> this.dogService.delFromMovesList((Dog) animal, move);
+            case "Camel" -> this.camelService.delFromMovesList((Camel) animal, move);
+            case "Horse" -> this.horseService.delFromMovesList((Horse) animal, move);
+            case "Donkey" -> this.donkeyService.delFromMovesList((Donkey) animal, move);
+            case "Humster" -> this.humsterService.delFromMovesList((Humster) animal, move);
         }
     }
 

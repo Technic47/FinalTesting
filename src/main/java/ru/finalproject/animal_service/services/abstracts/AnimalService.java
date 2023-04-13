@@ -1,5 +1,6 @@
 package ru.finalproject.animal_service.services.abstracts;
 
+import ru.finalproject.animal_service.models.AnimalMove;
 import ru.finalproject.animal_service.models.animals.abstracts.Animals;
 import ru.finalproject.animal_service.repositories.abstracts.CommonRepository;
 
@@ -10,16 +11,16 @@ public class AnimalService<E extends Animals, R extends CommonRepository<E>> ext
         super(repository);
     }
 
-    public void addToMovesList(E animal, Long id){
-        Set<Long> moves = animal.getMoves();
-        moves.add(id);
+    public void addToMovesList(E animal, AnimalMove move){
+        Set<AnimalMove> moves = animal.getMoves();
+        moves.add(move);
         animal.setMoves(moves);
         this.repository.save(animal);
     }
 
-    public void delFromMovesList(E animal, Long id){
-        Set<Long> moves = animal.getMoves();
-        moves.remove(id);
+    public void delFromMovesList(E animal, AnimalMove move){
+        Set<AnimalMove> moves = animal.getMoves();
+        moves.remove(move);
         animal.setMoves(moves);
         this.repository.save(animal);
     }
@@ -27,14 +28,14 @@ public class AnimalService<E extends Animals, R extends CommonRepository<E>> ext
     public void addToFoodList(E animal, Long id){
         Set<Long> food = animal.getFood();
         food.add(id);
-        animal.setMoves(food);
+        animal.setFood(food);
         this.repository.save(animal);
     }
 
     public void delFromFoodList(E animal, Long id){
         Set<Long> food = animal.getFood();
         food.remove(id);
-        animal.setMoves(food);
+        animal.setFood(food);
         this.repository.save(animal);
     }
 }
