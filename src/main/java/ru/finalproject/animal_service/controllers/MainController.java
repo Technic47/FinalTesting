@@ -71,10 +71,6 @@ public class MainController {
         return "/animals";
     }
 
-{
-        this.configure(animalType, id, model);
-    }
-
     @GetMapping("/newFoodMoves")
     public String newFoodMoves(Model model){
         model.addAttribute("username", USER_NAME);
@@ -115,8 +111,11 @@ public class MainController {
         model.addAttribute("food", service.getFood());
         return "/edit";
     }
-    )
+
     @PostMapping
     public void edit(
-            @ModelAttribute("animal") Actionable animal;
+            @ModelAttribute("animal") Actionable animal
+    ){
+//        this.configure(animalType, id, model);
+    }
 }
