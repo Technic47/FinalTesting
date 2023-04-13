@@ -38,7 +38,7 @@
                 <tbody>
                 <tr th:each="animal: ${allAnimals}">
                     <td>
-                        <a th:href="@{/edit(type=${animal.getClass().getSimpleName()}, id=${animal.getId()})}"
+                        <a th:href="@{/edit(type=${animal.getType()}, id=${animal.getId()})}"
                            th:text="${animal.toString()}"></a>
                     </td>
                 </tr>

@@ -23,7 +23,7 @@
         <div class="col-1-2-no-boarder" th:text="${animal.toString()}">
         </div>
         <div class="col-1-1">
-            <form method="post" th:action="@{/edit(type=${animal.getClass().getSimpleName()}, id=${animal.getId()})}">
+            <form method="post" th:action="@{/edit(type=${animal.getType()}, id=${animal.getId()})}">
                 <div class="col-5-2-no-boarders">
                     <label for="name">Введите имя:</label>
                     <input id="name" th:name="name" type="text"/>
@@ -67,6 +67,12 @@
                         <button th:name="action" th:type="submit" th:value="delFood">Убрать</button>
                     </div>
                     <br/>
+                </div>
+                <div class="col-5-2-no-boarders">
+                    <br/>
+                    <br/>
+                    <button th:name="action" th:type="submit" th:value="finish">Закончить</button>
+                    <button th:name="action" th:type="submit" th:value="delete">Удалить животное</button>
                 </div>
             </form>
         </div>

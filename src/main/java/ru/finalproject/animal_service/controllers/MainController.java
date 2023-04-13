@@ -9,15 +9,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.finalproject.animal_service.models.AnimalToShow;
+import ru.finalproject.animal_service.models.Food;
+import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.GeneralService;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
     private static String USER_NAME = "Default";
     private final GeneralService service;
+    private Set<AnimalToShow> animals = new HashSet<>();
 
     @Autowired
     public MainController(GeneralService service) {
@@ -37,15 +46,46 @@ public class MainController {
         if (!(userName == null)) {
             USER_NAME = userName;
         }
+        this.updateAnimalToShowList();
+
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", service.getAnimals());
+        model.addAttribute("allAnimals", animals);
+        model.addAttribute("moves", service.getMoves());
+        model.addAttribute("food", service.getFood());
         return "/animals";
+    }
+
+    private void updateAnimalToShowList() {
+        List<Actionable> animalList = service.getAnimals();
+        this.animals = new HashSet<>();
+        List<Food> finalFoodList = service.getFood();
+        List<Moves> finalMovesList = service.getMoves();
+        animalList.forEach(animal -> {
+            List<Food> animalFoodList = finalFoodList.stream()
+                    .filter(item -> animal.getFood().contains(item.getId()))
+                    .toList();
+
+            List<String> newFoodList = new ArrayList<>();
+            animalFoodList.forEach(item -> newFoodList.add(item.getName()));
+
+            List<Moves> animalMovesList = finalMovesList.stream()
+                    .filter(item -> animal.getMoves().contains(item.getId()))
+                    .toList();
+
+            List<String> newMovesList = new ArrayList<>();
+            animalMovesList.forEach(item -> newMovesList.add(item.getName()));
+
+            AnimalToShow newOne = new AnimalToShow(animal);
+            newOne.setFoodList(newFoodList);
+            newOne.setMovesList(newMovesList);
+            animals.add(newOne);
+        });
     }
 
     @GetMapping("/new")
     public String newAnimal(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", service.getAnimals());
+        model.addAttribute("allAnimals", animals);
         return "/new";
     }
 
@@ -70,14 +110,15 @@ public class MainController {
             case "Horse" -> this.service.saveAnimal(new Horse(name, time));
             case "Donkey" -> this.service.saveAnimal(new Donkey(name, time));
         }
-        model.addAttribute("allAnimals", service.getAnimals());
+        this.updateAnimalToShowList();
+        model.addAttribute("allAnimals", animals);
         return "/animals";
     }
 
     @GetMapping("/newFoodMoves")
     public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", service.getAnimals());
+        model.addAttribute("allAnimals", animals);
         return "/newFoodMoves";
     }
 
@@ -88,7 +129,7 @@ public class MainController {
             Model model
     ) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", service.getAnimals());
+        model.addAttribute("allAnimals", animals);
         if (foodName != null) {
             this.service.addFood(foodName);
         }
@@ -109,14 +150,16 @@ public class MainController {
         } else {
             model.addAttribute("type", 0);
         }
-        model.addAttribute("animal", this.service.getAnimal(animalType, id));
+        AnimalToShow animalToShow = this.animals.stream().filter(item -> item.getId().equals(id)).findAny().get();
+//        model.addAttribute("animal", this.service.getAnimal(animalType, id));
+        model.addAttribute("animal", animalToShow);
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
         return "/edit";
     }
 
     @PostMapping("/edit")
-    public void edit(
+    public String edit(
             @RequestParam(value = "type") String animalType,
             @RequestParam(value = "id") Long animalId,
             @RequestParam(value = "foodId", required = false) Long foodId,
@@ -125,13 +168,21 @@ public class MainController {
             Model model
     ) {
         Actionable animal = service.getAnimal(animalType, animalId);
+        model.addAttribute("username", USER_NAME);
+        model.addAttribute("allAnimals", animals);
         switch (action) {
             case "finish" -> this.service.saveAnimal(animal);
+            case "delete" -> {
+                this.service.delAnimal(animal);
+                return "/animals";
+            }
             case "addMove" -> this.service.animalAddMove(animal, moveId);
             case "delMove" -> this.service.animalDelMove(animal, moveId);
             case "addFood" -> this.service.animalAddFood(animal, foodId);
             case "delFood" -> this.service.animalDelFood(animal, foodId);
         }
+        this.updateAnimalToShowList();
         this.configure(animalType, animalId, model);
+        return "/animals";
     }
 }
