@@ -162,16 +162,25 @@ public class MainController {
     public String edit(
             @RequestParam(value = "type") String animalType,
             @RequestParam(value = "id") Long animalId,
+            @RequestParam(value = "name", required = false) String animalName,
+//            @RequestParam(value = "time", required = false) String animalTime,
             @RequestParam(value = "foodId", required = false) Long foodId,
             @RequestParam(value = "moveId", required = false) Long moveId,
             @RequestParam(value = "action") String action,
             Model model
     ) {
         Actionable animal = service.getAnimal(animalType, animalId);
+//        this.updateAnimalToShowList();
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", animals);
+        if (animalName != null) {
+            animal.setName(animalName);
+        }
         switch (action) {
-            case "finish" -> this.service.saveAnimal(animal);
+            case "finish" -> {
+                this.service.saveAnimal(animal);
+                return "/animals";
+            }
             case "delete" -> {
                 this.service.delAnimal(animal);
                 return "/animals";

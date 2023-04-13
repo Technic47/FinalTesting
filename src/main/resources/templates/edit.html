@@ -26,7 +26,7 @@
             <form method="post" th:action="@{/edit(type=${animal.getType()}, id=${animal.getId()})}">
                 <div class="col-5-2-no-boarders">
                     <label for="name">Введите имя:</label>
-                    <input id="name" th:name="name" type="text"/>
+                    <input id="name" th:name="name" th:value="${animal.getName()}" type="text"/>
                     <br/>
                     <br/>
                 </div>
