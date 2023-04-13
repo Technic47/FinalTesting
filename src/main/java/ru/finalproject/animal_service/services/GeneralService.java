@@ -6,7 +6,6 @@ import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
-import ru.finalproject.animal_service.models.animals.abstracts.Animals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +45,8 @@ public class GeneralService {
         }
     }
 
-    public List<Animals> getAnimals() {
-        List<Animals> newList = new ArrayList<>();
+    public List<Actionable> getAnimals() {
+        List<Actionable> newList = new ArrayList<>();
         newList.addAll(this.catService.index());
         newList.addAll(this.dogService.index());
         newList.addAll(this.camelService.index());
@@ -55,6 +54,19 @@ public class GeneralService {
         newList.addAll(this.donkeyService.index());
         newList.addAll(this.humsterService.index());
         return newList;
+    }
+
+    public Actionable getAnimal(String category, Long id){
+        Actionable animal = null;
+        switch (category) {
+            case "Cat" -> animal = this.catService.show(id);
+            case "Dog" -> animal = this.dogService.show(id);
+            case "Camel" -> animal = this.camelService.show(id);
+            case "Horse" -> animal = this.horseService.show(id);
+            case "Donkey" -> animal = this.donkeyService.show(id);
+            case "Humster" -> animal = this.humsterService.show(id);
+        }
+        return animal;
     }
 
     public void addMove(String name) {

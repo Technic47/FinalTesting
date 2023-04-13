@@ -1,10 +1,14 @@
 package ru.finalproject.animal_service.controllers;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.services.GeneralService;
 
@@ -37,24 +41,46 @@ public class MainController {
         return "/animals";
     }
 
-    @GetMapping
+    @GetMapping("/new")
     public String newAnimal(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("newCat", new Cat());
-        model.addAttribute("newDog", new Dog());
-        model.addAttribute("newHumster", new Humster());
-        model.addAttribute("newHorse", new Horse());
-        model.addAttribute("newDonkey", new Donkey());
-        model.addAttribute("newCamel", new Camel());
+        model.addAttribute("allAnimals", service.getAnimals());
         return "/new";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String create(
-            @Valid @ModelAttribute("newCat") Cat newCat,
-
-    ){
-
+            @RequestParam(value = "name")
+            @NotBlank(message = "Поле не должно быть пустым!")
+            @Size(min = 1, max = 100)
+            String name,
+            @RequestParam(value = "time", required = false)
+            @NotBlank(message = "Поле не должно быть пустым!")
+            @Size(min = 1, max = 24)
+            Integer time,
+            @RequestParam(value = "type") String animalType,
+            Model model
+    ) {
+        switch (animalType) {
+            case "Cat" -> this.service.addAnimal(new Cat(name));
+            case "Dog" -> this.service.addAnimal(new Dog(name));
+            case "Humster" -> this.service.addAnimal(new Humster(name));
+            case "Camel" -> this.service.addAnimal(new Camel(name, time));
+            case "Horse" -> this.service.addAnimal(new Horse(name, time));
+            case "Donkey" -> this.service.addAnimal(new Donkey(name, time));
+        }
+        model.addAttribute("allAnimals", service.getAnimals());
         return "/animals";
+    }
+
+    @GetMapping("/edit")
+    public String configure(
+            @RequestParam(value = "type") String animalType,
+            @RequestParam(value = "id") Long id,
+            Model model
+    ){
+        model.addAttribute("type", animalType);
+        model.addAttribute("animal", this.service.getAnimal(animalType, id));
+        return "/edit";
     }
 }
