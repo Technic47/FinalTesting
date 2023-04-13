@@ -51,7 +51,9 @@
         <div class="border-block">
             <table class="table-no-border">
                 <tr th:each="animal : ${allAnimals}">
-                    <td th:text="${animal.getName()}">
+                    <td>
+                        <a th:href="@{/edit(type=${animal.getClass().getSimpleName()}, id=${animal.getId()})}"
+                           th:text="${animal.toString()}"></a>
                     </td>
                 </tr>
             </table>

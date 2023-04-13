@@ -26,23 +26,28 @@
     </div>
     <div class="container">
         <div class="center">
-            <form method="get" th:action="@{/new}">
-                <input type="submit" value="Добавить животное"/>
-            </form>
-            <form method="get" th:action="@{/newFoodMoves}">
-                <input type="submit" value="Добавить еду или команду"/>
+            <form method="post" th:action="@{/newFoodMoves}">
+                <br/>
+                <br/>
+                <label for="food">Введите название еды:</label>
+                <input id="food" th:name="foodName" type="text"/>
+                <br/>
+                <br/>
+                <label for="move">Введите название команды:</label>
+                <input id="move" th:name="moveName" type="text"/>
+                <br/>
+                <br/>
+                <input type="submit" value="Добавить"/>
             </form>
         </div>
         <div class="border-block">
             <table class="table-no-border">
-                <tbody>
-                <tr th:each="animal: ${allAnimals}">
+                <tr th:each="animal : ${allAnimals}">
                     <td>
                         <a th:href="@{/edit(type=${animal.getClass().getSimpleName()}, id=${animal.getId()})}"
                            th:text="${animal.toString()}"></a>
                     </td>
                 </tr>
-                </tbody>
             </table>
         </div>
     </div>

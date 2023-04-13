@@ -5,11 +5,9 @@ import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.finalproject.animal_service.models.animals.*;
+import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.GeneralService;
 
 @Controller
@@ -73,14 +71,52 @@ public class MainController {
         return "/animals";
     }
 
+{
+        this.configure(animalType, id, model);
+    }
+
+    @GetMapping("/newFoodMoves")
+    public String newFoodMoves(Model model){
+        model.addAttribute("username", USER_NAME);
+        model.addAttribute("allAnimals", service.getAnimals());
+        return "/newFoodMoves";
+    }
+
+    @PostMapping("/newFoodMoves")
+    public String addFoodMoves(
+            @RequestParam(value = "foodName", required = false) String foodName,
+            @RequestParam(value = "moveName", required = false) String moveName,
+            Model model
+    ){
+        model.addAttribute("username", USER_NAME);
+        model.addAttribute("allAnimals", service.getAnimals());
+        if (foodName != null) {
+            this.service.addFood(foodName);
+        }
+        if (moveName != null) {
+            this.service.addMove(moveName);
+        }
+        return "/animals";
+    }
+
     @GetMapping("/edit")
     public String configure(
             @RequestParam(value = "type") String animalType,
             @RequestParam(value = "id") Long id,
             Model model
     ){
-        model.addAttribute("type", animalType);
+        if (animalType.contains("Camel Horse Donkey")) {
+            model.addAttribute("type", 1);
+        } else {
+            model.addAttribute("type", 0);
+        }
         model.addAttribute("animal", this.service.getAnimal(animalType, id));
+        model.addAttribute("moves", service.getMoves());
+        model.addAttribute("food", service.getFood());
         return "/edit";
     }
+    )
+    @PostMapping
+    public void edit(
+            @ModelAttribute("animal") Actionable animal;
 }

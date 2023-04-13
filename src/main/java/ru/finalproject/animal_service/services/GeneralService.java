@@ -56,7 +56,15 @@ public class GeneralService {
         return newList;
     }
 
-    public Actionable getAnimal(String category, Long id){
+    public List<Moves> getMoves() {
+        return movesService.index();
+    }
+
+    public List<Food> getFood() {
+        return foodService.index();
+    }
+
+    public Actionable getAnimal(String category, Long id) {
         Actionable animal = null;
         switch (category) {
             case "Cat" -> animal = this.catService.show(id);
@@ -96,6 +104,50 @@ public class GeneralService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void animalAddMove(Actionable animal, Long id) {
+        switch (animal.getClass().getSimpleName()) {
+            case "Cat" -> this.catService.addToMovesList((Cat) animal, id);
+            case "Dog" -> this.dogService.addToMovesList((Dog) animal, id);
+            case "Camel" -> this.camelService.addToMovesList((Camel) animal, id);
+            case "Horse" -> this.horseService.addToMovesList((Horse) animal, id);
+            case "Donkey" -> this.donkeyService.addToMovesList((Donkey) animal, id);
+            case "Humster" -> this.humsterService.addToMovesList((Humster) animal, id);
+        }
+    }
+
+    public void animaldelMove(Actionable animal, Long id) {
+        switch (animal.getClass().getSimpleName()) {
+            case "Cat" -> this.catService.delFromMovesList((Cat) animal, id);
+            case "Dog" -> this.dogService.delFromMovesList((Dog) animal, id);
+            case "Camel" -> this.camelService.delFromMovesList((Camel) animal, id);
+            case "Horse" -> this.horseService.delFromMovesList((Horse) animal, id);
+            case "Donkey" -> this.donkeyService.delFromMovesList((Donkey) animal, id);
+            case "Humster" -> this.humsterService.delFromMovesList((Humster) animal, id);
+        }
+    }
+
+    public void animalAddFood(Actionable animal, Long id) {
+        switch (animal.getClass().getSimpleName()) {
+            case "Cat" -> this.catService.addToFoodList((Cat) animal, id);
+            case "Dog" -> this.dogService.addToFoodList((Dog) animal, id);
+            case "Camel" -> this.camelService.addToFoodList((Camel) animal, id);
+            case "Horse" -> this.horseService.addToFoodList((Horse) animal, id);
+            case "Donkey" -> this.donkeyService.addToFoodList((Donkey) animal, id);
+            case "Humster" -> this.humsterService.addToFoodList((Humster) animal, id);
+        }
+    }
+
+    public void animalDelFood(Actionable animal, Long id) {
+        switch (animal.getClass().getSimpleName()) {
+            case "Cat" -> this.catService.delFromFoodList((Cat) animal, id);
+            case "Dog" -> this.dogService.delFromFoodList((Dog) animal, id);
+            case "Camel" -> this.camelService.delFromFoodList((Camel) animal, id);
+            case "Horse" -> this.horseService.delFromFoodList((Horse) animal, id);
+            case "Donkey" -> this.donkeyService.delFromFoodList((Donkey) animal, id);
+            case "Humster" -> this.humsterService.delFromFoodList((Humster) animal, id);
         }
     }
 
