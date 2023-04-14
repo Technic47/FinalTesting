@@ -10,6 +10,7 @@
     <link href="/static/css/main.css" rel="stylesheet"/>
 </head>
 <body>
+<script crossorigin="anonymous" src="https://kit.fontawesome.com/7edf9b7286.js"></script>
 <header class="header">
     <h1 th:text="${username}">
     </h1>
@@ -17,7 +18,6 @@
         <a th:href="@{/}">Смена пользователя</a>
     </nav>
 </header>
-
 <div class="main">
     <div class="center">
         <h3>
@@ -25,7 +25,7 @@
         </h3>
     </div>
     <div class="container">
-        <div class="center">
+        <div class="col-1-2">
             <form method="post" th:action="@{/newFoodMoves}">
                 <br/>
                 <br/>
@@ -38,14 +38,47 @@
                 <br/>
                 <br/>
                 <input type="submit" value="Добавить"/>
+                <br/>
+                <br/>
             </form>
         </div>
-        <div class="border-block">
+        <div class="col-1-2">
             <table class="table-no-border">
-                <tr th:each="animal : ${allAnimals}">
+                <tbody>
+                <tr th:each="count: ${counts}">
+                    <td th:text="${count.toString()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-1-2">
+            <h4>Еда</h4>
+            <table class="table-no-border">
+                <tr th:each="item : ${food}">
                     <td>
-                        <a th:href="@{/edit(type=${animal.getClass().getSimpleName()}, id=${animal.getId()})}"
-                           th:text="${animal.toString()}"></a>
+                        <form method="post" th:action="@{/delFoodMoves(type='food', name=${item.getName()})}">
+                            <p th:text="${item.getName()}"></p>
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-1-2">
+            <h4>Команды</h4>
+            <table class="table-no-border">
+                <tr th:each="item : ${moves}">
+                    <td>
+                        <form method="post" th:action="@{/delFoodMoves(type='moves', name=${item.getName()})}">
+                            <p th:text="${item.getName()}"></p>
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             </table>

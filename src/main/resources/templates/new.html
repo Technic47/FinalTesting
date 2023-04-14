@@ -25,7 +25,7 @@
         </h3>
     </div>
     <div class="container">
-        <div class="center">
+        <div class="col-1-2">
             <form method="post" th:action="@{/new}">
                 <label for="animalType">Тип:</label>
                 <select id="animalType" th:name="type">
@@ -48,7 +48,16 @@
                 <input type="submit" value="Добавить животное"/>
             </form>
         </div>
-        <div class="border-block">
+        <div class="col-1-2">
+            <table class="table-no-border">
+                <tbody>
+                <tr th:each="count: ${counts}">
+                    <td th:text="${count.toString()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-1-1">
             <table class="table-no-border">
                 <tr th:each="animal : ${allAnimals}">
                     <td>

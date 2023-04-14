@@ -41,40 +41,15 @@ public class MainController {
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
+        model.addAttribute("counts", service.getCounts());
         return "/animals";
     }
-
-//    private void updateAnimalToShowList() {
-//        List<Actionable> animalList = service.getAnimals();
-//        this.animals = new HashSet<>();
-//        List<Food> finalFoodList = service.getFood();
-//        List<Moves> finalMovesList = service.getMoves();
-//        animalList.forEach(animal -> {
-//            List<Food> animalFoodList = finalFoodList.stream()
-//                    .filter(item -> animal.getFood().contains(item.getId()))
-//                    .toList();
-//
-//            List<String> newFoodList = new ArrayList<>();
-//            animalFoodList.forEach(item -> newFoodList.add(item.getName()));
-//
-//            List<Moves> animalMovesList = finalMovesList.stream()
-//                    .filter(item -> animal.getMoves().contains(item.getId()))
-//                    .toList();
-//
-//            List<String> newMovesList = new ArrayList<>();
-//            animalMovesList.forEach(item -> newMovesList.add(item.getName()));
-//
-//            AnimalToShow newOne = new AnimalToShow(animal);
-//            newOne.setFoodList(newFoodList);
-//            newOne.setMovesList(newMovesList);
-//            animals.add(newOne);
-//        });
-//    }
 
     @GetMapping("/new")
     public String newAnimal(Model model) {
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+        model.addAttribute("counts", service.getCounts());
         return "/new";
     }
 
@@ -100,6 +75,7 @@ public class MainController {
             case "Donkey" -> this.service.saveAnimal(new Donkey(name, time), true);
         }
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+        model.addAttribute("counts", service.getCounts());
         return "/animals";
     }
 
@@ -107,6 +83,9 @@ public class MainController {
     public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+        model.addAttribute("moves", service.getMoves());
+        model.addAttribute("food", service.getFood());
+        model.addAttribute("counts", service.getCounts());
         return "/newFoodMoves";
     }
 
@@ -118,6 +97,7 @@ public class MainController {
     ) {
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+        model.addAttribute("counts", service.getCounts());
         if (foodName != null) {
             this.service.addFood(foodName);
         }
@@ -125,6 +105,19 @@ public class MainController {
             this.service.addMove(moveName);
         }
         return "/animals";
+    }
+
+    @PostMapping("/delFoodMoves")
+    public String delFoodMoves(
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "name", required = false) String name,
+            Model model
+    ) {
+        switch (type) {
+            case "food" -> this.service.delFood(name);
+            case "moves" -> this.service.delMove(name);
+        }
+               return "redirect:/newFoodMoves";
     }
 
     @GetMapping("/edit")
@@ -164,11 +157,13 @@ public class MainController {
             case "finish" -> {
                 this.service.saveAnimal(animal, false);
                 model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+                model.addAttribute("counts", service.getCounts());
                 return "/animals";
             }
             case "delete" -> {
                 this.service.delAnimal(animal);
                 model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+                model.addAttribute("counts", service.getCounts());
                 return "/animals";
             }
             case "addMove" -> this.service.animalAddMove(animal, moveId);

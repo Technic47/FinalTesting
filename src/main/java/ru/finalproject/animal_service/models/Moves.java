@@ -1,16 +1,12 @@
 package ru.finalproject.animal_service.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 public class Moves {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    @Size(min = 1, max = 100)
-    @NotBlank(message = "Поле не должно быть пустым!")
     @Column(name = "name")
     protected String name;
 

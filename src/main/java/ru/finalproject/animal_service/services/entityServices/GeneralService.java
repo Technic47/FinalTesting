@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.finalproject.animal_service.models.AnimalToShow;
+import ru.finalproject.animal_service.models.Counter;
 import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
@@ -96,6 +97,10 @@ public class GeneralService {
 
     public List<Food> getFood() {
         return cache.getFoodList();
+    }
+
+    public List<Counter> getCounts() {
+        return this.counterService.index();
     }
 
     public void addMove(String name) {

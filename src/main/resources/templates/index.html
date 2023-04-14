@@ -4,18 +4,20 @@
     <meta charset="UTF-8"/>
     <title>Welcome!</title>
     <link href="/static/css/center.css" rel="stylesheet" type="text/css"/>
-    <link href="/static/css/text.css" rel="stylesheet"/>
+    <link href="/static/css/container.css" rel="stylesheet"/>
 </head>
 <body>
-
-
-<div class="center">
-    <h1> Здравствуйте! </h1>
-    <form th:action="@{/start}" th:method="POST">
-        <label for="name">Введите своё имя: </label>
-        <input id="name" th:name="name" type="text">
-        <input type="submit"/>
-    </form>
+<div class="container">
+    <div class="col-1-1">
+        <h1> Здравствуйте! </h1>
+        <form th:action="@{/start}" th:method="POST">
+            <label for="name">Введите своё имя: </label>
+            <input id="name" th:name="name" type="text">
+            <input type="submit"/>
+            <br/>
+            <br/>
+        </form>
+    </div>
 </div>
 </body>
 </html>

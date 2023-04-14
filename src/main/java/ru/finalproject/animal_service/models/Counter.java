@@ -49,9 +49,6 @@ public class Counter {
         return count;
     }
 
-//    public void setCount(Integer count) {
-//        this.count = count;
-//    }
 
     @Override
     public boolean equals(Object o) {
@@ -64,5 +61,10 @@ public class Counter {
     @Override
     public int hashCode() {
         return Objects.hash(id, animalType, count);
+    }
+
+    @Override
+    public String toString() {
+        return animalType + " - " + count;
     }
 }
