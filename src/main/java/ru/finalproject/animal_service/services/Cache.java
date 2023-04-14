@@ -39,7 +39,7 @@ public class Cache {
             case "Donkey" -> this.donkeyList.add((Donkey) newAnimal);
             case "Humster" -> this.humsterList.add((Humster) newAnimal);
         }
-        this.updateAnimalToShowList(type, newAnimal);
+        this.addAnimalToShowList(newAnimal);
     }
 
     public void delAnimalFromCache(String type, Actionable animal) {
@@ -56,7 +56,7 @@ public class Cache {
             case "Humster" ->
                     this.humsterList = humsterList.stream().filter(item -> !Objects.equals(item.getId(), id)).toList();
         }
-        this.updateAnimalToShowList(type, animal);
+        this.delAnimalFromShowList(type, animal);
     }
 
     public void addFoodToCache(Food item) {
@@ -114,12 +114,20 @@ public class Cache {
     }
 
     public void updateAnimalToShowList(String category, Actionable animal) {
+        this.delAnimalFromShowList(category, animal);
+        this.addAnimalToShowList(animal);
+    }
+
+    private void addAnimalToShowList(Actionable animal){
+        AnimalToShow newItem = conversion(animal);
+        this.animalToShowList.add(newItem);
+    }
+
+    public void delAnimalFromShowList(String category, Actionable animal) {
         AnimalToShow oldItem = this.getAnimalToShow(category, animal.getId());
         this.animalToShowList = animalToShowList.stream()
                 .filter(item -> !Objects.equals(item, oldItem))
                 .collect(Collectors.toList());
-        AnimalToShow newItem = conversion(animal);
-        this.animalToShowList.add(newItem);
     }
 
     public Actionable getAnimal(String category, Long id) {

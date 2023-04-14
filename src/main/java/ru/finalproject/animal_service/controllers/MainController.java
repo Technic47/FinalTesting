@@ -157,17 +157,18 @@ public class MainController {
     ) {
         Actionable animal = service.getAnimal(animalType, id);
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         if (animalName != null) {
             animal.setName(animalName);
         }
         switch (action) {
             case "finish" -> {
                 this.service.saveAnimal(animal, false);
+                model.addAttribute("allAnimals", service.getAllAnimalsToShow());
                 return "/animals";
             }
             case "delete" -> {
                 this.service.delAnimal(animal);
+                model.addAttribute("allAnimals", service.getAllAnimalsToShow());
                 return "/animals";
             }
             case "addMove" -> this.service.animalAddMove(animal, moveId);
