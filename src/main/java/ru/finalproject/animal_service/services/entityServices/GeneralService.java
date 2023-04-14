@@ -3,13 +3,13 @@ package ru.finalproject.animal_service.services.entityServices;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.finalproject.animal_service.models.AnimalToShow;
 import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.Cache;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +40,10 @@ public class GeneralService {
         this.cache.setCamelList(camelService.index());
         this.cache.setMovesList(movesService.index());
         this.cache.setFoodList(foodService.index());
+        this.cache.convertToShow();
     }
 
-    public void saveAnimal(Actionable animal) {
+    public void saveAnimal(Actionable animal, boolean newOne) {
         String type = animal.getClass().getSimpleName();
         Actionable newAnimal = null;
         switch (type) {
@@ -53,8 +54,12 @@ public class GeneralService {
             case "Donkey" -> newAnimal = this.donkeyService.save((Donkey) animal);
             case "Humster" -> newAnimal = this.humsterService.save((Humster) animal);
         }
-        this.counterService.countPlus(type);
-        this.cache.addAnimalToCache(type, newAnimal);
+        if (newOne) {
+            this.counterService.countPlus(type);
+            this.cache.addAnimalToCache(type, newAnimal);
+        } else{
+            this.cache.updateAnimalToShowList(type, animal);
+        }
     }
 
     public void delAnimal(Actionable animal) {
@@ -69,43 +74,28 @@ public class GeneralService {
             case "Humster" -> this.humsterService.delete(id);
         }
         this.counterService.countMinus(type);
-        this.cache.delAnimalFromCache(type, id);
+        this.cache.delAnimalFromCache(type, animal);
     }
 
-    @Deprecated
-    public List<Actionable> getAnimals() {
-        List<Actionable> newList = new ArrayList<>();
-        newList.addAll(this.catService.index());
-        newList.addAll(this.dogService.index());
-        newList.addAll(this.camelService.index());
-        newList.addAll(this.horseService.index());
-        newList.addAll(this.donkeyService.index());
-        newList.addAll(this.humsterService.index());
-        return newList;
+
+    public List<AnimalToShow> getAllAnimalsToShow() {
+        return cache.getAllAnimalsToShow();
     }
 
-    @Deprecated
+    public AnimalToShow getAnimalToShow(String category, Long id) {
+        return cache.getAnimalToShow(category, id);
+    }
+
     public Actionable getAnimal(String category, Long id) {
-        Actionable animal = null;
-        switch (category) {
-            case "Cat" -> animal = this.catService.show(id);
-            case "Dog" -> animal = this.dogService.show(id);
-            case "Camel" -> animal = this.camelService.show(id);
-            case "Horse" -> animal = this.horseService.show(id);
-            case "Donkey" -> animal = this.donkeyService.show(id);
-            case "Humster" -> animal = this.humsterService.show(id);
-        }
-        return animal;
+        return cache.getAnimal(category, id);
     }
 
-    @Deprecated
     public List<Moves> getMoves() {
-        return movesService.index();
+        return cache.getMovesList();
     }
 
-    @Deprecated
     public List<Food> getFood() {
-        return foodService.index();
+        return cache.getFoodList();
     }
 
     public void addMove(String name) {
@@ -154,7 +144,7 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.addToMovesList((Donkey) animal, move);
             case "Humster" -> this.humsterService.addToMovesList((Humster) animal, move);
         }
-        this.cache.updateAnimalInCache(type, animal);
+        this.cache.updateAnimalToShowList(type, animal);
     }
 
     public void animalDelMove(Actionable animal, Long move) {
@@ -167,7 +157,7 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.delFromMovesList((Donkey) animal, move);
             case "Humster" -> this.humsterService.delFromMovesList((Humster) animal, move);
         }
-        this.cache.updateAnimalInCache(type, animal);
+        this.cache.updateAnimalToShowList(type, animal);
     }
 
     public void animalAddFood(Actionable animal, Long id) {
@@ -180,7 +170,7 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.addToFoodList((Donkey) animal, id);
             case "Humster" -> this.humsterService.addToFoodList((Humster) animal, id);
         }
-        this.cache.updateAnimalInCache(type, animal);
+        this.cache.updateAnimalToShowList(type, animal);
     }
 
     public void animalDelFood(Actionable animal, Long id) {
@@ -193,7 +183,7 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.delFromFoodList((Donkey) animal, id);
             case "Humster" -> this.humsterService.delFromFoodList((Humster) animal, id);
         }
-        this.cache.updateAnimalInCache(type, animal);
+        this.cache.updateAnimalToShowList(type, animal);
     }
 
 

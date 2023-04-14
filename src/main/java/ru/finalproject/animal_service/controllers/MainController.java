@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
-import ru.finalproject.animal_service.services.Cache;
 import ru.finalproject.animal_service.services.entityServices.GeneralService;
 
 @Controller
@@ -19,12 +18,10 @@ import ru.finalproject.animal_service.services.entityServices.GeneralService;
 public class MainController {
     private static String USER_NAME = "Default";
     private final GeneralService service;
-    private final Cache cache;
 
     @Autowired
-    public MainController(GeneralService service, Cache cache) {
+    public MainController(GeneralService service) {
         this.service = service;
-        this.cache = cache;
     }
 
     @GetMapping("/")
@@ -40,11 +37,10 @@ public class MainController {
         if (!(userName == null)) {
             USER_NAME = userName;
         }
-
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
-        model.addAttribute("moves", cache.getMovesList());
-        model.addAttribute("food", cache.getFoodList());
+        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
+        model.addAttribute("moves", service.getMoves());
+        model.addAttribute("food", service.getFood());
         return "/animals";
     }
 
@@ -78,7 +74,7 @@ public class MainController {
     @GetMapping("/new")
     public String newAnimal(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
+        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         return "/new";
     }
 
@@ -96,21 +92,21 @@ public class MainController {
             Model model
     ) {
         switch (animalType) {
-            case "Cat" -> this.service.saveAnimal(new Cat(name));
-            case "Dog" -> this.service.saveAnimal(new Dog(name));
-            case "Humster" -> this.service.saveAnimal(new Humster(name));
-            case "Camel" -> this.service.saveAnimal(new Camel(name, time));
-            case "Horse" -> this.service.saveAnimal(new Horse(name, time));
-            case "Donkey" -> this.service.saveAnimal(new Donkey(name, time));
+            case "Cat" -> this.service.saveAnimal(new Cat(name), true);
+            case "Dog" -> this.service.saveAnimal(new Dog(name), true);
+            case "Humster" -> this.service.saveAnimal(new Humster(name), true);
+            case "Camel" -> this.service.saveAnimal(new Camel(name, time), true);
+            case "Horse" -> this.service.saveAnimal(new Horse(name, time), true);
+            case "Donkey" -> this.service.saveAnimal(new Donkey(name, time), true);
         }
-        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
+        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         return "/animals";
     }
 
     @GetMapping("/newFoodMoves")
     public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
+        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         return "/newFoodMoves";
     }
 
@@ -121,7 +117,7 @@ public class MainController {
             Model model
     ) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
+        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         if (foodName != null) {
             this.service.addFood(foodName);
         }
@@ -142,9 +138,9 @@ public class MainController {
         } else {
             model.addAttribute("type", 0);
         }
-        model.addAttribute("animal", cache.getAnimalToShow(animalType, id));
-        model.addAttribute("moves", cache.getMovesList());
-        model.addAttribute("food", cache.getFoodList());
+        model.addAttribute("animal", service.getAnimalToShow(animalType, id));
+        model.addAttribute("moves", service.getMoves());
+        model.addAttribute("food", service.getFood());
         return "/edit";
     }
 
@@ -159,15 +155,15 @@ public class MainController {
             @RequestParam(value = "action") String action,
             Model model
     ) {
-        Actionable animal = cache.getAnimal(animalType, id);
+        Actionable animal = service.getAnimal(animalType, id);
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
+        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         if (animalName != null) {
             animal.setName(animalName);
         }
         switch (action) {
             case "finish" -> {
-                this.service.saveAnimal(animal);
+                this.service.saveAnimal(animal, false);
                 return "/animals";
             }
             case "delete" -> {

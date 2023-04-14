@@ -11,6 +11,7 @@ import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("singleton")
@@ -38,9 +39,11 @@ public class Cache {
             case "Donkey" -> this.donkeyList.add((Donkey) newAnimal);
             case "Humster" -> this.humsterList.add((Humster) newAnimal);
         }
+        this.updateAnimalToShowList(type, newAnimal);
     }
 
-    public void delAnimalFromCache(String type, Long id) {
+    public void delAnimalFromCache(String type, Actionable animal) {
+        Long id = animal.getId();
         switch (type) {
             case "Cat" -> this.catList = catList.stream().filter(item -> !Objects.equals(item.getId(), id)).toList();
             case "Dog" -> this.dogList = dogList.stream().filter(item -> !Objects.equals(item.getId(), id)).toList();
@@ -53,11 +56,7 @@ public class Cache {
             case "Humster" ->
                     this.humsterList = humsterList.stream().filter(item -> !Objects.equals(item.getId(), id)).toList();
         }
-    }
-
-    public void updateAnimalInCache(String type, Actionable animal) {
-        this.delAnimalFromCache(type, animal.getId());
-        this.addAnimalToCache(type, animal);
+        this.updateAnimalToShowList(type, animal);
     }
 
     public void addFoodToCache(Food item) {
@@ -77,6 +76,14 @@ public class Cache {
     }
 
     public List<AnimalToShow> getAllAnimalsToShow() {
+        return this.animalToShowList;
+    }
+
+    public void convertToShow() {
+        this.getAllAnimals().forEach(animal -> this.animalToShowList.add(this.conversion(animal)));
+    }
+
+    private List<Actionable> getAllAnimals() {
         List<Actionable> newList = new ArrayList<>();
         newList.addAll(catList);
         newList.addAll(dogList);
@@ -84,30 +91,35 @@ public class Cache {
         newList.addAll(horseList);
         newList.addAll(donkeyList);
         newList.addAll(camelList);
-        this.animalToShowList.clear();
-        this.convertToShow(newList);
-        return this.animalToShowList;
+        return newList;
     }
 
-    public void convertToShow(List<Actionable> animalList){
-        animalList.forEach(animal -> {
-            List<Food> animalFoodList = foodList.stream()
-                    .filter(item -> animal.getFood().contains(item.getId()))
-                    .toList();
-            List<String> newFoodList = new ArrayList<>();
-            animalFoodList.forEach(item -> newFoodList.add(item.getName()));
+    private AnimalToShow conversion(Actionable animal) {
+        List<Food> animalFoodList = foodList.stream()
+                .filter(item -> animal.getFood().contains(item.getId()))
+                .toList();
+        List<String> newFoodList = new ArrayList<>();
+        animalFoodList.forEach(item -> newFoodList.add(item.getName()));
 
-            List<Moves> animalMovesList = movesList.stream()
-                    .filter(item -> animal.getMoves().contains(item.getId()))
-                    .toList();
-            List<String> newMovesList = new ArrayList<>();
-            animalMovesList.forEach(item -> newMovesList.add(item.getName()));
+        List<Moves> animalMovesList = movesList.stream()
+                .filter(item -> animal.getMoves().contains(item.getId()))
+                .toList();
+        List<String> newMovesList = new ArrayList<>();
+        animalMovesList.forEach(item -> newMovesList.add(item.getName()));
 
-            AnimalToShow newOne = new AnimalToShow(animal);
-            newOne.setFoodList(newFoodList);
-            newOne.setMovesList(newMovesList);
-            this.animalToShowList.add(newOne);
-        });
+        AnimalToShow newOne = new AnimalToShow(animal);
+        newOne.setFoodList(newFoodList);
+        newOne.setMovesList(newMovesList);
+        return newOne;
+    }
+
+    public void updateAnimalToShowList(String category, Actionable animal) {
+        AnimalToShow oldItem = this.getAnimalToShow(category, animal.getId());
+        this.animalToShowList = animalToShowList.stream()
+                .filter(item -> !Objects.equals(item, oldItem))
+                .collect(Collectors.toList());
+        AnimalToShow newItem = conversion(animal);
+        this.animalToShowList.add(newItem);
     }
 
     public Actionable getAnimal(String category, Long id) {
@@ -125,7 +137,7 @@ public class Cache {
         return animal;
     }
 
-    public AnimalToShow getAnimalToShow(String category, Long id){
+    public AnimalToShow getAnimalToShow(String category, Long id) {
         return this.animalToShowList.stream()
                 .filter(item -> item.getType().equals(category))
                 .filter(item -> item.getId().equals(id))
