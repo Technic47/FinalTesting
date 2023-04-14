@@ -151,7 +151,6 @@ public class MainController {
             model.addAttribute("type", 0);
         }
         AnimalToShow animalToShow = this.animals.stream().filter(item -> item.getId().equals(id)).findAny().get();
-//        model.addAttribute("animal", this.service.getAnimal(animalType, id));
         model.addAttribute("animal", animalToShow);
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
@@ -170,7 +169,6 @@ public class MainController {
             Model model
     ) {
         Actionable animal = service.getAnimal(animalType, animalId);
-//        this.updateAnimalToShowList();
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", animals);
         if (animalName != null) {
@@ -192,6 +190,6 @@ public class MainController {
         }
         this.updateAnimalToShowList();
         this.configure(animalType, animalId, model);
-        return "/animals";
+        return "/edit";
     }
 }
