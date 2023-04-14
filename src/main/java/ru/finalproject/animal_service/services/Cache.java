@@ -49,6 +49,17 @@ public class Cache {
         }
     }
 
+    public void updateAnimalInCache(String type, Actionable animal) {
+        switch (type) {
+            case "Cat" -> this.catList = catList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
+            case "Dog" -> this.dogList = dogList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
+            case "Camel" -> this.camelList = camelList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
+            case "Horse" -> this.horseList = horseList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
+            case "Donkey" -> this.donkeyList = donkeyList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
+            case "Humster" -> this.humsterList = humsterList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
+        }
+        this.addAnimalToCache(type, animal);
+    }
 
     public void addFoodToCache(Food item) {
         this.foodList.add(item);
@@ -66,6 +77,31 @@ public class Cache {
         this.movesList.remove(item);
     }
 
+    public List<Actionable> getAnimals() {
+        List<Actionable> newList = new ArrayList<>();
+        newList.addAll(catList);
+        newList.addAll(dogList);
+        newList.addAll(humsterList);
+        newList.addAll(horseList);
+        newList.addAll(donkeyList);
+        newList.addAll(camelList);
+        return newList;
+    }
+
+    public Actionable getAnimal(String category, Long id) {
+        Actionable animal = null;
+        switch (category) {
+            case "Cat" -> animal = this.catList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
+            case "Dog" -> animal = this.dogList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
+            case "Camel" -> animal = this.camelList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
+            case "Horse" -> animal = this.horseList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
+            case "Donkey" ->
+                    animal = this.donkeyList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
+            case "Humster" ->
+                    animal = this.humsterList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
+        }
+        return animal;
+    }
 
     public List<Cat> getCatList() {
         return catList;

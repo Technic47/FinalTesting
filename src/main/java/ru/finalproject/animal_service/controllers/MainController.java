@@ -50,12 +50,11 @@ public class MainController {
         if (!(userName == null)) {
             USER_NAME = userName;
         }
-        this.updateAnimalToShowList();
 
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", animals);
-        model.addAttribute("moves", service.getMoves());
-        model.addAttribute("food", service.getFood());
+        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("moves", cache.getMovesList());
+        model.addAttribute("food", cache.getFoodList());
         return "/animals";
     }
 
@@ -89,7 +88,7 @@ public class MainController {
     @GetMapping("/new")
     public String newAnimal(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", animals);
+        model.addAttribute("allAnimals", cache.getAnimals());
         return "/new";
     }
 
@@ -114,15 +113,14 @@ public class MainController {
             case "Horse" -> this.service.saveAnimal(new Horse(name, time));
             case "Donkey" -> this.service.saveAnimal(new Donkey(name, time));
         }
-        this.updateAnimalToShowList();
-        model.addAttribute("allAnimals", animals);
+        model.addAttribute("allAnimals", cache.getAnimals());
         return "/animals";
     }
 
     @GetMapping("/newFoodMoves")
     public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", animals);
+        model.addAttribute("allAnimals", cache.getAnimals());
         return "/newFoodMoves";
     }
 
@@ -133,7 +131,7 @@ public class MainController {
             Model model
     ) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", animals);
+        model.addAttribute("allAnimals", cache.getAnimals());
         if (foodName != null) {
             this.service.addFood(foodName);
         }
@@ -154,19 +152,16 @@ public class MainController {
         } else {
             model.addAttribute("type", 0);
         }
-        AnimalToShow animalToShow = this.animals.stream()
-                .filter(item -> item.getId().equals(id))
-                .findAny().get();
-        model.addAttribute("animal", animalToShow);
-        model.addAttribute("moves", service.getMoves());
-        model.addAttribute("food", service.getFood());
+        model.addAttribute("animal", cache.getAnimal(animalType, id));
+        model.addAttribute("moves", cache.getMovesList());
+        model.addAttribute("food", cache.getFoodList());
         return "/edit";
     }
 
     @PostMapping("/edit")
     public String edit(
             @RequestParam(value = "type") String animalType,
-            @RequestParam(value = "id") Long animalId,
+            @RequestParam(value = "id") Long id,
             @RequestParam(value = "name", required = false) String animalName,
 //            @RequestParam(value = "time", required = false) String animalTime,
             @RequestParam(value = "foodId", required = false) Long foodId,
@@ -174,9 +169,9 @@ public class MainController {
             @RequestParam(value = "action") String action,
             Model model
     ) {
-        Actionable animal = service.getAnimal(animalType, animalId);
+        Actionable animal = cache.getAnimal(animalType, id);
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", animals);
+        model.addAttribute("allAnimals", cache.getAnimals());
         if (animalName != null) {
             animal.setName(animalName);
         }
@@ -187,7 +182,6 @@ public class MainController {
             }
             case "delete" -> {
                 this.service.delAnimal(animal);
-                this.updateAnimalToShowList();
                 return "/animals";
             }
             case "addMove" -> this.service.animalAddMove(animal, moveId);
@@ -195,8 +189,7 @@ public class MainController {
             case "addFood" -> this.service.animalAddFood(animal, foodId);
             case "delFood" -> this.service.animalDelFood(animal, foodId);
         }
-        this.updateAnimalToShowList();
-        this.configure(animalType, animalId, model);
+        this.configure(animalType, id, model);
         return "/edit";
     }
 }

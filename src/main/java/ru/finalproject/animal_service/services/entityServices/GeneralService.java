@@ -30,7 +30,7 @@ public class GeneralService {
         this.loadValues();
     }
 
-    private void loadValues(){
+    private void loadValues() {
         this.cache.setCatList(catService.index());
         this.cache.setDogList(dogService.index());
         this.cache.setHumsterList(humsterService.index());
@@ -71,6 +71,7 @@ public class GeneralService {
         this.cache.delAnimalFromCache(type, id);
     }
 
+    @Deprecated
     public List<Actionable> getAnimals() {
         List<Actionable> newList = new ArrayList<>();
         newList.addAll(this.catService.index());
@@ -82,6 +83,7 @@ public class GeneralService {
         return newList;
     }
 
+    @Deprecated
     public Actionable getAnimal(String category, Long id) {
         Actionable animal = null;
         switch (category) {
@@ -95,10 +97,12 @@ public class GeneralService {
         return animal;
     }
 
+    @Deprecated
     public List<Moves> getMoves() {
         return movesService.index();
     }
 
+    @Deprecated
     public List<Food> getFood() {
         return foodService.index();
     }
@@ -110,10 +114,11 @@ public class GeneralService {
     }
 
     public boolean delMove(String name) {
-        List<Moves> movesList = movesService.index();
-        Optional<Moves> findMove = movesList.stream().filter(item -> item.getName().equals(name)).findFirst();
+        List<Moves> findItem = this.cache.getMovesList();
+        Optional<Moves> findMove = findItem.stream().filter(item -> item.getName().equals(name)).findFirst();
         if (findMove.isPresent()) {
             this.movesService.delete(findMove.get().getId());
+            this.cache.delMovesFromCache(findMove.get());
             return true;
         } else {
             return false;
@@ -127,10 +132,11 @@ public class GeneralService {
     }
 
     public boolean delFood(String name) {
-        List<Food> movesList = foodService.index();
-        Optional<Food> findMove = movesList.stream().filter(item -> item.getName().equals(name)).findFirst();
-        if (findMove.isPresent()) {
-            this.foodService.delete(findMove.get().getId());
+        List<Food> movesList = this.cache.getFoodList();
+        Optional<Food> findItem = movesList.stream().filter(item -> item.getName().equals(name)).findFirst();
+        if (findItem.isPresent()) {
+            this.foodService.delete(findItem.get().getId());
+            this.cache.delFoodFromCache(findItem.get());
             return true;
         } else {
             return false;
@@ -138,7 +144,8 @@ public class GeneralService {
     }
 
     public void animalAddMove(Actionable animal, Long move) {
-        switch (animal.getClass().getSimpleName()) {
+        String type = animal.getClass().getSimpleName();
+        switch (type) {
             case "Cat" -> this.catService.addToMovesList((Cat) animal, move);
             case "Dog" -> this.dogService.addToMovesList((Dog) animal, move);
             case "Camel" -> this.camelService.addToMovesList((Camel) animal, move);
@@ -146,10 +153,12 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.addToMovesList((Donkey) animal, move);
             case "Humster" -> this.humsterService.addToMovesList((Humster) animal, move);
         }
+        this.cache.updateAnimalInCache(type, animal);
     }
 
     public void animalDelMove(Actionable animal, Long move) {
-        switch (animal.getClass().getSimpleName()) {
+        String type = animal.getClass().getSimpleName();
+        switch (type) {
             case "Cat" -> this.catService.delFromMovesList((Cat) animal, move);
             case "Dog" -> this.dogService.delFromMovesList((Dog) animal, move);
             case "Camel" -> this.camelService.delFromMovesList((Camel) animal, move);
@@ -157,10 +166,12 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.delFromMovesList((Donkey) animal, move);
             case "Humster" -> this.humsterService.delFromMovesList((Humster) animal, move);
         }
+        this.cache.updateAnimalInCache(type, animal);
     }
 
     public void animalAddFood(Actionable animal, Long id) {
-        switch (animal.getClass().getSimpleName()) {
+        String type = animal.getClass().getSimpleName();
+        switch (type) {
             case "Cat" -> this.catService.addToFoodList((Cat) animal, id);
             case "Dog" -> this.dogService.addToFoodList((Dog) animal, id);
             case "Camel" -> this.camelService.addToFoodList((Camel) animal, id);
@@ -168,10 +179,12 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.addToFoodList((Donkey) animal, id);
             case "Humster" -> this.humsterService.addToFoodList((Humster) animal, id);
         }
+        this.cache.updateAnimalInCache(type, animal);
     }
 
     public void animalDelFood(Actionable animal, Long id) {
-        switch (animal.getClass().getSimpleName()) {
+        String type = animal.getClass().getSimpleName();
+        switch (type) {
             case "Cat" -> this.catService.delFromFoodList((Cat) animal, id);
             case "Dog" -> this.dogService.delFromFoodList((Dog) animal, id);
             case "Camel" -> this.camelService.delFromFoodList((Camel) animal, id);
@@ -179,6 +192,7 @@ public class GeneralService {
             case "Donkey" -> this.donkeyService.delFromFoodList((Donkey) animal, id);
             case "Humster" -> this.humsterService.delFromFoodList((Humster) animal, id);
         }
+        this.cache.updateAnimalInCache(type, animal);
     }
 
 
