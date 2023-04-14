@@ -1,4 +1,4 @@
-package ru.finalproject.animal_service.services;
+package ru.finalproject.animal_service.services.entityServices;
 
 import org.springframework.stereotype.Service;
 import ru.finalproject.animal_service.models.Food;

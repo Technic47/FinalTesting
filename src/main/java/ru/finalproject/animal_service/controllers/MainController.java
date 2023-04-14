@@ -14,7 +14,8 @@ import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
-import ru.finalproject.animal_service.services.GeneralService;
+import ru.finalproject.animal_service.services.Cache;
+import ru.finalproject.animal_service.services.entityServices.GeneralService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,9 +29,12 @@ public class MainController {
     private final GeneralService service;
     private Set<AnimalToShow> animals = new HashSet<>();
 
+    private final Cache cache = new Cache();
+
     @Autowired
     public MainController(GeneralService service) {
         this.service = service;
+        this.service.setCache(this.cache);
     }
 
     @GetMapping("/")
@@ -150,7 +154,9 @@ public class MainController {
         } else {
             model.addAttribute("type", 0);
         }
-        AnimalToShow animalToShow = this.animals.stream().filter(item -> item.getId().equals(id)).findAny().get();
+        AnimalToShow animalToShow = this.animals.stream()
+                .filter(item -> item.getId().equals(id))
+                .findAny().get();
         model.addAttribute("animal", animalToShow);
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
@@ -181,6 +187,7 @@ public class MainController {
             }
             case "delete" -> {
                 this.service.delAnimal(animal);
+                this.updateAnimalToShowList();
                 return "/animals";
             }
             case "addMove" -> this.service.animalAddMove(animal, moveId);
