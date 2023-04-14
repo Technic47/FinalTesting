@@ -9,32 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.finalproject.animal_service.models.AnimalToShow;
-import ru.finalproject.animal_service.models.Food;
-import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.Cache;
 import ru.finalproject.animal_service.services.entityServices.GeneralService;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
     private static String USER_NAME = "Default";
     private final GeneralService service;
-    private Set<AnimalToShow> animals = new HashSet<>();
-
-    private final Cache cache = new Cache();
+    private final Cache cache;
 
     @Autowired
-    public MainController(GeneralService service) {
+    public MainController(GeneralService service, Cache cache) {
         this.service = service;
-        this.service.setCache(this.cache);
+        this.cache = cache;
     }
 
     @GetMapping("/")
@@ -52,43 +42,43 @@ public class MainController {
         }
 
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
         model.addAttribute("moves", cache.getMovesList());
         model.addAttribute("food", cache.getFoodList());
         return "/animals";
     }
 
-    private void updateAnimalToShowList() {
-        List<Actionable> animalList = service.getAnimals();
-        this.animals = new HashSet<>();
-        List<Food> finalFoodList = service.getFood();
-        List<Moves> finalMovesList = service.getMoves();
-        animalList.forEach(animal -> {
-            List<Food> animalFoodList = finalFoodList.stream()
-                    .filter(item -> animal.getFood().contains(item.getId()))
-                    .toList();
-
-            List<String> newFoodList = new ArrayList<>();
-            animalFoodList.forEach(item -> newFoodList.add(item.getName()));
-
-            List<Moves> animalMovesList = finalMovesList.stream()
-                    .filter(item -> animal.getMoves().contains(item.getId()))
-                    .toList();
-
-            List<String> newMovesList = new ArrayList<>();
-            animalMovesList.forEach(item -> newMovesList.add(item.getName()));
-
-            AnimalToShow newOne = new AnimalToShow(animal);
-            newOne.setFoodList(newFoodList);
-            newOne.setMovesList(newMovesList);
-            animals.add(newOne);
-        });
-    }
+//    private void updateAnimalToShowList() {
+//        List<Actionable> animalList = service.getAnimals();
+//        this.animals = new HashSet<>();
+//        List<Food> finalFoodList = service.getFood();
+//        List<Moves> finalMovesList = service.getMoves();
+//        animalList.forEach(animal -> {
+//            List<Food> animalFoodList = finalFoodList.stream()
+//                    .filter(item -> animal.getFood().contains(item.getId()))
+//                    .toList();
+//
+//            List<String> newFoodList = new ArrayList<>();
+//            animalFoodList.forEach(item -> newFoodList.add(item.getName()));
+//
+//            List<Moves> animalMovesList = finalMovesList.stream()
+//                    .filter(item -> animal.getMoves().contains(item.getId()))
+//                    .toList();
+//
+//            List<String> newMovesList = new ArrayList<>();
+//            animalMovesList.forEach(item -> newMovesList.add(item.getName()));
+//
+//            AnimalToShow newOne = new AnimalToShow(animal);
+//            newOne.setFoodList(newFoodList);
+//            newOne.setMovesList(newMovesList);
+//            animals.add(newOne);
+//        });
+//    }
 
     @GetMapping("/new")
     public String newAnimal(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
         return "/new";
     }
 
@@ -113,14 +103,14 @@ public class MainController {
             case "Horse" -> this.service.saveAnimal(new Horse(name, time));
             case "Donkey" -> this.service.saveAnimal(new Donkey(name, time));
         }
-        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
         return "/animals";
     }
 
     @GetMapping("/newFoodMoves")
     public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
         return "/newFoodMoves";
     }
 
@@ -131,7 +121,7 @@ public class MainController {
             Model model
     ) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
         if (foodName != null) {
             this.service.addFood(foodName);
         }
@@ -152,7 +142,7 @@ public class MainController {
         } else {
             model.addAttribute("type", 0);
         }
-        model.addAttribute("animal", cache.getAnimal(animalType, id));
+        model.addAttribute("animal", cache.getAnimalToShow(animalType, id));
         model.addAttribute("moves", cache.getMovesList());
         model.addAttribute("food", cache.getFoodList());
         return "/edit";
@@ -171,7 +161,7 @@ public class MainController {
     ) {
         Actionable animal = cache.getAnimal(animalType, id);
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", cache.getAnimals());
+        model.addAttribute("allAnimals", cache.getAllAnimalsToShow());
         if (animalName != null) {
             animal.setName(animalName);
         }

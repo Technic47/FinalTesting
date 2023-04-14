@@ -1,5 +1,8 @@
 package ru.finalproject.animal_service.services;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import ru.finalproject.animal_service.models.AnimalToShow;
 import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
@@ -9,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
+@Scope("singleton")
 public class Cache {
     private List<Cat> catList = new ArrayList<>();
     private List<Dog> dogList = new ArrayList<>();
@@ -18,6 +23,7 @@ public class Cache {
     private List<Camel> camelList = new ArrayList<>();
     private List<Food> foodList = new ArrayList<>();
     private List<Moves> movesList = new ArrayList<>();
+    private List<AnimalToShow> animalToShowList = new ArrayList<>();
 
 
     public Cache() {
@@ -50,14 +56,7 @@ public class Cache {
     }
 
     public void updateAnimalInCache(String type, Actionable animal) {
-        switch (type) {
-            case "Cat" -> this.catList = catList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
-            case "Dog" -> this.dogList = dogList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
-            case "Camel" -> this.camelList = camelList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
-            case "Horse" -> this.horseList = horseList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
-            case "Donkey" -> this.donkeyList = donkeyList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
-            case "Humster" -> this.humsterList = humsterList.stream().filter(item -> !Objects.equals(item.getId(), animal.getId())).toList();
-        }
+        this.delAnimalFromCache(type, animal.getId());
         this.addAnimalToCache(type, animal);
     }
 
@@ -77,7 +76,7 @@ public class Cache {
         this.movesList.remove(item);
     }
 
-    public List<Actionable> getAnimals() {
+    public List<AnimalToShow> getAllAnimalsToShow() {
         List<Actionable> newList = new ArrayList<>();
         newList.addAll(catList);
         newList.addAll(dogList);
@@ -85,7 +84,30 @@ public class Cache {
         newList.addAll(horseList);
         newList.addAll(donkeyList);
         newList.addAll(camelList);
-        return newList;
+        this.animalToShowList.clear();
+        this.convertToShow(newList);
+        return this.animalToShowList;
+    }
+
+    public void convertToShow(List<Actionable> animalList){
+        animalList.forEach(animal -> {
+            List<Food> animalFoodList = foodList.stream()
+                    .filter(item -> animal.getFood().contains(item.getId()))
+                    .toList();
+            List<String> newFoodList = new ArrayList<>();
+            animalFoodList.forEach(item -> newFoodList.add(item.getName()));
+
+            List<Moves> animalMovesList = movesList.stream()
+                    .filter(item -> animal.getMoves().contains(item.getId()))
+                    .toList();
+            List<String> newMovesList = new ArrayList<>();
+            animalMovesList.forEach(item -> newMovesList.add(item.getName()));
+
+            AnimalToShow newOne = new AnimalToShow(animal);
+            newOne.setFoodList(newFoodList);
+            newOne.setMovesList(newMovesList);
+            this.animalToShowList.add(newOne);
+        });
     }
 
     public Actionable getAnimal(String category, Long id) {
@@ -101,6 +123,14 @@ public class Cache {
                     animal = this.humsterList.stream().filter(item -> item.getId().equals(id)).findFirst().get();
         }
         return animal;
+    }
+
+    public AnimalToShow getAnimalToShow(String category, Long id){
+        return this.animalToShowList.stream()
+                .filter(item -> item.getType().equals(category))
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .get();
     }
 
     public List<Cat> getCatList() {

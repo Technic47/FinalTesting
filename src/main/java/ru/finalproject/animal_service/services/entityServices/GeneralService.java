@@ -1,5 +1,6 @@
 package ru.finalproject.animal_service.services.entityServices;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.finalproject.animal_service.models.Food;
@@ -27,9 +28,9 @@ public class GeneralService {
     private Cache cache;
 
     public GeneralService() {
-        this.loadValues();
     }
 
+    @PostConstruct
     private void loadValues() {
         this.cache.setCatList(catService.index());
         this.cache.setDogList(dogService.index());
@@ -241,6 +242,7 @@ public class GeneralService {
         this.counterService = counterService;
     }
 
+    @Autowired
     public void setCache(Cache cache) {
         this.cache = cache;
     }
