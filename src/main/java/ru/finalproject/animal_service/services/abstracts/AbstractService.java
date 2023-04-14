@@ -25,6 +25,7 @@ public class AbstractService<E, R extends CommonRepository<E>>
     }
 
     @Override
+    @Deprecated
     public void update(Long id, E updateItem) {
     }
 

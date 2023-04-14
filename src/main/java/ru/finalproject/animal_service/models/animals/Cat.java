@@ -9,6 +9,10 @@ public class Cat extends HomeAnimal {
         super(true);
     }
 
+    public Cat(Long id, String name) {
+        super(id, name, true);
+    }
+
     public Cat(String name) {
         super(name);
     }

@@ -8,6 +8,10 @@ public class Humster extends HomeAnimal {
         super(true);
     }
 
+    public Humster(Long id, String name) {
+        super(id, name, true);
+    }
+
     public Humster(String name) {
         super(name);
     }

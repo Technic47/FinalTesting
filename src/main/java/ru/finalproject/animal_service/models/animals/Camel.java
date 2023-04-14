@@ -10,6 +10,10 @@ public class Camel extends WorkAnimal {
         super();
     }
 
+    public Camel(Long id, String name, Integer workHours) {
+        super(id, name, workHours);
+    }
+
     public Camel(String name, Integer workHours) {
         super(name, workHours);
     }

@@ -9,6 +9,11 @@ public class HomeAnimal extends Animals {
     public HomeAnimal() {
     }
 
+    public HomeAnimal(Long id, String name, boolean lazy) {
+        super(id, name);
+        this.lazy = lazy;
+    }
+
     public HomeAnimal(String name) {
         super(name);
     }

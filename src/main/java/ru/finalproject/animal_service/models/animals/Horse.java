@@ -13,6 +13,10 @@ public class Horse extends WorkAnimal {
         super(name, workHours);
     }
 
+    public Horse(Long id, String name, Integer workHours) {
+        super(id, name, workHours);
+    }
+
     @Override
     public String toString() {
         return "Лошадь";

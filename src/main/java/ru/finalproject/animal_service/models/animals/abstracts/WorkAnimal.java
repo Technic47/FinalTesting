@@ -9,6 +9,11 @@ public class WorkAnimal extends Animals {
     public WorkAnimal() {
     }
 
+    public WorkAnimal(Long id, String name, Integer workHours) {
+        super(id, name);
+        this.workHours = workHours;
+    }
+
     public WorkAnimal(String name, Integer workHours) {
         super(name);
         this.workHours = workHours;
