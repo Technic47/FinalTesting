@@ -9,7 +9,7 @@ import java.io.FileWriter;
 
 @Service
 public class CounterService extends AbstractService<Counter, CounterRepository> {
-    private final static String PATH = "src/main/resources/counter.txt";
+    private final static String PATH_TO_SAVE = "src/main/resources/counter.txt";
 
     protected CounterService(CounterRepository repository) {
         super(repository);
@@ -22,7 +22,7 @@ public class CounterService extends AbstractService<Counter, CounterRepository> 
         } else {
             counter.countPlus();
             repository.save(counter);
-            try (FileWriter writer = new FileWriter(PATH)) {
+            try (FileWriter writer = new FileWriter(PATH_TO_SAVE)) {
                 StringBuilder builder = new StringBuilder();
                 builder.append(counter.getAnimalType())
                         .append(" - ")

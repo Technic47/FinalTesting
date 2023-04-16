@@ -1,5 +1,6 @@
 package ru.finalproject.animal_service.models.animals.abstracts;
 
+import ru.finalproject.animal_service.models.Counter;
 import ru.finalproject.animal_service.models.Food;
 import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
@@ -20,4 +21,5 @@ public class TestCredentials {
     public static final Moves TEST_MOVE = new Moves(TEST_ID, TEST_NAME);
     public static final Food TEST_FOOD = new Food(TEST_ID, TEST_NAME);
     public static final Set<Long> TEST_SET = new HashSet<>(Arrays.asList(1L, 2L, 3L, 4L, 5L));
+    public static final Counter TEST_COUNTER = new Counter("Cat");
 }

@@ -123,7 +123,7 @@ public class Cache {
         this.animalToShowList.add(newItem);
     }
 
-    public void delAnimalFromShowList(String category, Actionable animal) {
+    private void delAnimalFromShowList(String category, Actionable animal) {
         AnimalToShow oldItem = this.getAnimalToShow(category, animal.getId());
         this.animalToShowList = animalToShowList.stream()
                 .filter(item -> !Objects.equals(item, oldItem))
@@ -216,6 +216,4 @@ public class Cache {
     public void setMovesList(List<Moves> movesList) {
         this.movesList = movesList;
     }
-
-
 }
