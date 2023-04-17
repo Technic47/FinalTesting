@@ -55,7 +55,7 @@ public class Counter {
         if (this == o) return true;
         if (!(o instanceof Counter)) return false;
         Counter counter = (Counter) o;
-        return Objects.equals(id, counter.id) && Objects.equals(animalType, counter.animalType);
+        return Objects.equals(animalType, counter.animalType);
     }
 
     @Override

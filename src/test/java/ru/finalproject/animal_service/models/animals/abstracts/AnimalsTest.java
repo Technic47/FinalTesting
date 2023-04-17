@@ -49,4 +49,15 @@ class AnimalsTest {
         assertEquals(5, TEST_CAT.getMoves().size());
         assertEquals(5, TEST_CAT.getFood().size());
     }
+
+    @Test
+    void toStringTest(){
+        assertEquals("Кошка", TEST_CAT.toString());
+        assertEquals("Собака", TEST_DOG.toString());
+        assertEquals("Хомяк", TEST_HUMSTER.toString());
+        assertEquals("Лошадь", TEST_HORSE.toString());
+        assertEquals("Осёл", TEST_DONKEY.toString());
+        assertEquals("Верблюд", TEST_CAMEL.toString());
+
+    }
 }

@@ -41,29 +41,6 @@ public class Config implements WebMvcConfigurer {
         return dataSource;
     }
 
-//    @Bean
-//    public EntityManagerFactory entityManagerFactory() {
-//
-//        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-//        vendorAdapter.setGenerateDdl(true);
-//
-//        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-//        factory.setJpaVendorAdapter(vendorAdapter);
-//        factory.setPackagesToScan("ru.finalproject.animal_service.models");
-//        factory.setDataSource(dataSource());
-//        factory.afterPropertiesSet();
-//
-//        return factory.getObject();
-//    }
-//
-//    @Bean
-//    public PlatformTransactionManager transactionManager() {
-//
-//        JpaTransactionManager txManager = new JpaTransactionManager();
-//        txManager.setEntityManagerFactory(entityManagerFactory());
-//        return txManager;
-//    }
-
     @Bean(name = "multipartResolver")
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
@@ -73,10 +50,6 @@ public class Config implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/");
-//        registry.addResourceHandler("/IMG/**")
-//                .addResourceLocations("classpath:/IMG/");
-//        registry.addResourceHandler("/preview/**")
-//                .addResourceLocations("classpath:/IMG/preview/");
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
     }
