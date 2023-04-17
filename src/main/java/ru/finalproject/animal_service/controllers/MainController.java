@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.finalproject.animal_service.models.Food;
+import ru.finalproject.animal_service.models.Moves;
 import ru.finalproject.animal_service.models.animals.*;
 import ru.finalproject.animal_service.models.animals.abstracts.Actionable;
 import ru.finalproject.animal_service.services.entityServices.GeneralService;
@@ -99,10 +101,10 @@ public class MainController {
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         model.addAttribute("counts", service.getCounts());
         if (foodName != null) {
-            this.service.addFood(foodName);
+            this.service.addFood(new Food(foodName));
         }
         if (moveName != null) {
-            this.service.addMove(moveName);
+            this.service.addMove(new Moves(moveName));
         }
         return "/animals";
     }
@@ -110,8 +112,7 @@ public class MainController {
     @PostMapping("/delFoodMoves")
     public String delFoodMoves(
             @RequestParam(value = "type", required = false) String type,
-            @RequestParam(value = "name", required = false) String name,
-            Model model
+            @RequestParam(value = "name", required = false) String name
     ) {
         switch (type) {
             case "food" -> this.service.delFood(name);

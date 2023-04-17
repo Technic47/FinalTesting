@@ -31,6 +31,20 @@ public class GeneralService {
     public GeneralService() {
     }
 
+    @Autowired
+    public GeneralService(CatService catService, DogService dogService, CamelService camelService, DonkeyService donkeyService, HorseService horseService, HumsterService humsterService, MovesService movesService, FoodService foodService, CounterService counterService, Cache cache) {
+        this.catService = catService;
+        this.dogService = dogService;
+        this.camelService = camelService;
+        this.donkeyService = donkeyService;
+        this.horseService = horseService;
+        this.humsterService = humsterService;
+        this.movesService = movesService;
+        this.foodService = foodService;
+        this.counterService = counterService;
+        this.cache = cache;
+    }
+
     @PostConstruct
     private void loadValues() {
         this.cache.setCatList(catService.index());
@@ -58,7 +72,7 @@ public class GeneralService {
         if (newOne) {
             this.counterService.countPlus(type);
             this.cache.addAnimalToCache(type, newAnimal);
-        } else{
+        } else {
             this.cache.updateAnimalToShowList(type, animal);
         }
     }
@@ -103,39 +117,31 @@ public class GeneralService {
         return this.counterService.index();
     }
 
-    public void addMove(String name) {
-        Moves item = new Moves(name);
+    public void addMove(Moves item) {
         this.movesService.save(item);
         this.cache.addMovesToCache(item);
     }
 
-    public boolean delMove(String name) {
+    public void delMove(String name) {
         List<Moves> findItem = this.cache.getMovesList();
         Optional<Moves> findMove = findItem.stream().filter(item -> item.getName().equals(name)).findFirst();
         if (findMove.isPresent()) {
             this.movesService.delete(findMove.get().getId());
             this.cache.delMovesFromCache(findMove.get());
-            return true;
-        } else {
-            return false;
         }
     }
 
-    public void addFood(String name) {
-        Food item = new Food(name);
+    public void addFood(Food item) {
         this.foodService.save(item);
         this.cache.addFoodToCache(item);
     }
 
-    public boolean delFood(String name) {
-        List<Food> movesList = this.cache.getFoodList();
-        Optional<Food> findItem = movesList.stream().filter(item -> item.getName().equals(name)).findFirst();
+    public void delFood(String name) {
+        List<Food> foodList = this.cache.getFoodList();
+        Optional<Food> findItem = foodList.stream().filter(item -> item.getName().equals(name)).findFirst();
         if (findItem.isPresent()) {
             this.foodService.delete(findItem.get().getId());
             this.cache.delFoodFromCache(findItem.get());
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -189,56 +195,5 @@ public class GeneralService {
             case "Humster" -> this.humsterService.delFromFoodList((Humster) animal, id);
         }
         this.cache.updateAnimalToShowList(type, animal);
-    }
-
-
-    @Autowired
-    private void setCatService(CatService catService) {
-        this.catService = catService;
-    }
-
-    @Autowired
-    private void setDogService(DogService dogService) {
-        this.dogService = dogService;
-    }
-
-    @Autowired
-    private void setCamelService(CamelService camelService) {
-        this.camelService = camelService;
-    }
-
-    @Autowired
-    private void setDonkeyService(DonkeyService donkeyService) {
-        this.donkeyService = donkeyService;
-    }
-
-    @Autowired
-    private void setHorseService(HorseService horseService) {
-        this.horseService = horseService;
-    }
-
-    @Autowired
-    private void setHumsterService(HumsterService humsterService) {
-        this.humsterService = humsterService;
-    }
-
-    @Autowired
-    private void setMovesService(MovesService movesService) {
-        this.movesService = movesService;
-    }
-
-    @Autowired
-    private void setFoodService(FoodService foodService) {
-        this.foodService = foodService;
-    }
-
-    @Autowired
-    private void setCounterService(CounterService counterService) {
-        this.counterService = counterService;
-    }
-
-    @Autowired
-    public void setCache(Cache cache) {
-        this.cache = cache;
     }
 }
