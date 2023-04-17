@@ -345,6 +345,9 @@ class GeneralServiceTest {
     }
 
     @Test
-    void setCache() {
+    void clearCache() {
+        service.clearCache();
+
+        verify(cache).clearAll();
     }
 }

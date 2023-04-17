@@ -173,4 +173,19 @@ class CacheTest {
         assertEquals(TEST_NAME, animal.getName());
         assertEquals("Cat", animal.getType());
     }
+
+    @Test
+    void clearAll() {
+        cache.clearAll();
+
+        assertTrue(cache.getAllAnimalsToShow().isEmpty());
+        assertTrue(cache.getCatList().isEmpty());
+        assertTrue(cache.getDogList().isEmpty());
+        assertTrue(cache.getHumsterList().isEmpty());
+        assertTrue(cache.getHorseList().isEmpty());
+        assertTrue(cache.getDonkeyList().isEmpty());
+        assertTrue(cache.getCamelList().isEmpty());
+        assertTrue(cache.getFoodList().isEmpty());
+        assertTrue(cache.getMovesList().isEmpty());
+    }
 }

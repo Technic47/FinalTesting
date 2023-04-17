@@ -153,6 +153,18 @@ public class Cache {
                 .get();
     }
 
+    public void clearAll(){
+        this.catList = new ArrayList<>();
+        this.dogList = new ArrayList<>();
+        this.humsterList = new ArrayList<>();
+        this.horseList = new ArrayList<>();
+        this.donkeyList = new ArrayList<>();
+        this.camelList = new ArrayList<>();
+        this.movesList = new ArrayList<>();
+        this.foodList = new ArrayList<>();
+        this.animalToShowList = new ArrayList<>();
+    }
+
     public List<Cat> getCatList() {
         return catList;
     }

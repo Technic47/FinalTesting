@@ -84,7 +84,6 @@ public class MainController {
     @GetMapping("/newFoodMoves")
     public String newFoodMoves(Model model) {
         model.addAttribute("username", USER_NAME);
-        model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
         model.addAttribute("counts", service.getCounts());
@@ -127,11 +126,10 @@ public class MainController {
             @RequestParam(value = "id") Long id,
             Model model
     ) {
-        if (animalType.contains("Camel Horse Donkey")) {
-            model.addAttribute("type", 1);
-        } else {
-            model.addAttribute("type", 0);
-        }
+        switch (animalType) {
+            case "Cat", "Dog", "Humster" -> model.addAttribute("type", 0);
+            case "Camel", "Horse", "Donkey" -> model.addAttribute("type", 1);
+               }
         model.addAttribute("animal", service.getAnimalToShow(animalType, id));
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());

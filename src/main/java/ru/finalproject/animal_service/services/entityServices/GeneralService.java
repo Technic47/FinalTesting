@@ -46,7 +46,7 @@ public class GeneralService {
     }
 
     @PostConstruct
-    private void loadValues() {
+    public void loadValues() {
         this.cache.setCatList(catService.index());
         this.cache.setDogList(dogService.index());
         this.cache.setHumsterList(humsterService.index());
@@ -91,7 +91,6 @@ public class GeneralService {
         this.counterService.countMinus(type);
         this.cache.delAnimalFromCache(type, animal);
     }
-
 
     public List<AnimalToShow> getAllAnimalsToShow() {
         return cache.getAllAnimalsToShow();
@@ -195,5 +194,9 @@ public class GeneralService {
             case "Humster" -> this.humsterService.delFromFoodList((Humster) animal, id);
         }
         this.cache.updateAnimalToShowList(type, animal);
+    }
+
+    public void clearCache(){
+        this.cache.clearAll();
     }
 }
