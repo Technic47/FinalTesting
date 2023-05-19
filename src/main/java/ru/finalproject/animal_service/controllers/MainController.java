@@ -28,7 +28,7 @@ public class MainController {
 
     @GetMapping("/")
     public String hallo() {
-        return "/index";
+        return "index";
     }
 
     @PostMapping("/start")
@@ -44,7 +44,7 @@ public class MainController {
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
         model.addAttribute("counts", service.getCounts());
-        return "/animals";
+        return "animals";
     }
 
     @GetMapping("/new")
@@ -52,7 +52,7 @@ public class MainController {
         model.addAttribute("username", USER_NAME);
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         model.addAttribute("counts", service.getCounts());
-        return "/new";
+        return "new";
     }
 
     @PostMapping("/new")
@@ -78,7 +78,7 @@ public class MainController {
         }
         model.addAttribute("allAnimals", service.getAllAnimalsToShow());
         model.addAttribute("counts", service.getCounts());
-        return "/animals";
+        return "animals";
     }
 
     @GetMapping("/newFoodMoves")
@@ -87,7 +87,7 @@ public class MainController {
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
         model.addAttribute("counts", service.getCounts());
-        return "/newFoodMoves";
+        return "newFoodMoves";
     }
 
     @PostMapping("/newFoodMoves")
@@ -105,7 +105,7 @@ public class MainController {
         if (moveName != null) {
             this.service.addMove(new Moves(moveName));
         }
-        return "/animals";
+        return "animals";
     }
 
     @PostMapping("/delFoodMoves")
@@ -117,7 +117,7 @@ public class MainController {
             case "food" -> this.service.delFood(name);
             case "moves" -> this.service.delMove(name);
         }
-               return "redirect:/newFoodMoves";
+               return "redirect:newFoodMoves";
     }
 
     @GetMapping("/edit")
@@ -133,7 +133,7 @@ public class MainController {
         model.addAttribute("animal", service.getAnimalToShow(animalType, id));
         model.addAttribute("moves", service.getMoves());
         model.addAttribute("food", service.getFood());
-        return "/edit";
+        return "edit";
     }
 
     @PostMapping("/edit")
@@ -141,7 +141,6 @@ public class MainController {
             @RequestParam(value = "type") String animalType,
             @RequestParam(value = "id") Long id,
             @RequestParam(value = "name", required = false) String animalName,
-//            @RequestParam(value = "time", required = false) String animalTime,
             @RequestParam(value = "foodId", required = false) Long foodId,
             @RequestParam(value = "moveId", required = false) Long moveId,
             @RequestParam(value = "action") String action,
@@ -157,13 +156,13 @@ public class MainController {
                 this.service.saveAnimal(animal, false);
                 model.addAttribute("allAnimals", service.getAllAnimalsToShow());
                 model.addAttribute("counts", service.getCounts());
-                return "/animals";
+                return "animals";
             }
             case "delete" -> {
                 this.service.delAnimal(animal);
                 model.addAttribute("allAnimals", service.getAllAnimalsToShow());
                 model.addAttribute("counts", service.getCounts());
-                return "/animals";
+                return "animals";
             }
             case "addMove" -> this.service.animalAddMove(animal, moveId);
             case "delMove" -> this.service.animalDelMove(animal, moveId);
@@ -171,6 +170,6 @@ public class MainController {
             case "delFood" -> this.service.animalDelFood(animal, foodId);
         }
         this.configure(animalType, id, model);
-        return "/edit";
+        return "edit";
     }
 }
